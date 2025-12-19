@@ -14,6 +14,14 @@
         <p>@feedBackMsg</p>
     </div>
 }
+<EditForm EditContext="@editContext"><DataAnnotationsValidator/> <ValidationSummary />
+    <div class="row">
+        <div class="col-md-6">
+            <p>Form fieldss</p>
+        </div>
+    </div>
+</EditForm>
+
 
 @code {
     [Parameter]
@@ -21,6 +29,9 @@
 
     private string feedBackMsg = "";
     private Employee employeeInfo = new Employee();
+    private EditContext editContext;
+    private ValidationMessageStore validationMessageStore;
+
 
     [Inject]
     private EmployeeServices EmployeeServices { get; set; }
@@ -37,6 +48,8 @@
             {
                 employeeInfo = new Employee();
             }
+            editContext = new EditContext(employeeInfo);
+            validationMessageStore = new ValidationMessageStore(editContext);
         }
         catch (Exception ex)
         {
