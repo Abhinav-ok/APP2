@@ -1,6 +1,6 @@
 ﻿@page "/employeecrud"
 @page "/employeecrud/{EmployeeID:int?}"
-<PageTitle>CRUD - StarTED</PageTitle>
+<PageTitle>StarTED CRUD</PageTitle>
 @rendermode InteractiveServer
 
 @using StarTEDSystem.BLL
@@ -10,7 +10,7 @@
 
 @if (!string.IsNullOrWhiteSpace(feedBackMsg))
 {
-    <div class="alert alert-info">
+    <div>
         <p>@feedBackMsg</p>
     </div>
 }
@@ -20,4 +20,28 @@
     public int? EmployeeID { get; set; }
 
     private string feedBackMsg = "";
+    private Employee employeeInfo = new Employee();
+
+    [Inject]
+    private EmployeeServices EmployeeServices { get; set; }
+
+    protected override void OnInitialized()
+    {
+        try
+        {
+            if (EmployeeID.HasValue && EmployeeID.Value > 0)
+            {
+                employeeInfo = EmployeeServices.Employee_GetById(EmployeeID.Value);
+            }
+            else
+            {
+                employeeInfo = new Employee();
+            }
+        }
+        catch (Exception ex)
+        {
+            feedBackMsg = $"Errpr: {ex.Message}";
+        }
+    }
+
 }
