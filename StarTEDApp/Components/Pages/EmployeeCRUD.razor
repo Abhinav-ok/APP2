@@ -1,0 +1,23 @@
+﻿@page "/employeecrud"
+@page "/employeecrud/{EmployeeID:int?}"
+<PageTitle>CRUD - StarTED</PageTitle>
+@rendermode InteractiveServer
+
+@using StarTEDSystem.BLL
+@using StarTEDSystem.Entities
+
+<h1>Employee Maintenance</h1>
+
+@if (!string.IsNullOrWhiteSpace(feedBackMsg))
+{
+    <div class="alert alert-info">
+        <p>@feedBackMsg</p>
+    </div>
+}
+
+@code {
+    [Parameter]
+    public int? EmployeeID { get; set; }
+
+    private string feedBackMsg = "";
+}
