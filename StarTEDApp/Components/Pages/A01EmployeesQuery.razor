@@ -1,0 +1,101 @@
+﻿@page "/a01-employees-query"
+<PageTitle>Query - StarTED</PageTitle>
+@rendermode InteractiveServer
+@using StarTEDSystem.BLL
+@using StarTEDSystem.Entities
+
+<h3>A01EmployeesQuery</h3>
+<h1>Employees by Partial Name</h1>
+@if (!string.IsNullOrWhiteSpace(feedBackMsg))
+{
+    <div class="alert alert-info">
+        <p>@feedBackMsg</p>
+    </div>
+}
+<div class="row mb-3">
+    <div class="col-md-6">
+        <label class="form-label">Enter partial name</label>
+        <input class="form-control" @bind="partialName" />
+    </div>
+</div>
+
+<div class="mb-3">
+    <button class="btn btn-success" @onclick="OnSearch">Search</button>
+    <button class="btn btn-secondary ms-2" @onclick="OnClear">Clear</button>
+</div>
+@if (results != null)
+{
+    if (results.Count == 0)
+    {
+        <p class="text-danger fw-bold">No employees found.</p>
+    }
+    else
+    {
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Position</th>
+                    <th>Program</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var emp in results)
+                {
+                    <tr>
+                        <td>@emp.FullName</td>
+                        <td>@(emp.PositionID)</td>
+                        <td>@(emp.ProgramID)</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+}
+
+
+@code {
+    private string feedBackMsg = "";
+    private string partialName = "";
+
+    private List<Employee>? results;
+
+    private int pageNumber = 1;
+    private int pageSize = 10;
+
+    [Inject]
+    private EmployeeServices? EmployeeServices { get; set; }
+
+    private void OnSearch()
+    {
+        feedBackMsg = "";
+        results = null;
+
+        try
+        {
+            results = EmployeeServices?.Employee_GetByPartialName(partialName, pageNumber, pageSize);
+
+            if (results?.Count == 0)
+            {
+                feedBackMsg = "No employees found for that partial name.";
+            }
+        }
+        catch (ArgumentException ex)
+        {
+            feedBackMsg = ex.Message;
+        }
+        catch (Exception ex)
+        {
+            feedBackMsg = $"System Error: {ex.Message}";
+        }
+    }
+
+    private void OnClear()
+    {
+        feedBackMsg = "";
+        partialName = "";
+        results = null;
+        pageNumber = 1;
+    }
+}
+
