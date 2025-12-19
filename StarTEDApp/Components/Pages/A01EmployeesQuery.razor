@@ -23,6 +23,10 @@
     <button class="btn btn-success" @onclick="OnSearch">Search</button>
     <button class="btn btn-secondary ms-2" @onclick="OnClear">Clear</button>
 </div>
+<div class="mb-3">
+    <button class="btn btn-outline-primary" @onclick="GoToNew">New Employee</button>
+</div>
+
 @if (results != null)
 {
     if (results.Count == 0)
@@ -37,6 +41,8 @@
                     <th>Name</th>
                     <th>Position</th>
                     <th>Program</th>
+                    <th>Action</th>
+
                 </tr>
             </thead>
             <tbody>
@@ -46,6 +52,10 @@
                         <td>@emp.FullName</td>
                         <td>@(emp.PositionID)</td>
                         <td>@(emp.ProgramID)</td>
+                        <td>
+                            <button @onclick="() => GoToEdit(emp.EmployeeID)">Edit</button>
+                        </td>
+
                     </tr>
                 }
             </tbody>
@@ -97,5 +107,17 @@
         results = null;
         pageNumber = 1;
     }
+    [Inject]
+    private NavigationManager NavManager { get; set; }
+    private void GoToNew()
+    {
+        NavManager.NavigateTo("/employeecrud");
+    }
+
+    private void GoToEdit(int employeeId)
+    {
+        NavManager.NavigateTo($"/employeecrud/{employeeId}");
+    }
+
 }
 
