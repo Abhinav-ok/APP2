@@ -56,6 +56,12 @@
         </div>
     </div>
 </EditForm>
+<div class="mt-4">
+    <button type="button" @onclick="OnSave">Save</button>
+    <button type="button" @onclick="OnClear">Clear</button>
+    <button type="button" @onclick="ReturnToQuery">Return to Query</button>
+</div>
+
 
 
 @code {
@@ -102,5 +108,57 @@
             feedBackMsg = $"Errpr: {ex.Message}";
         }
     }
+
+
+
+    private void OnSave()
+    {
+        feedBackMsg = "";
+        validationMessageStore.Clear();
+
+        try
+        {
+            if (editContext.Validate())
+            {
+                if (employeeInfo.ProgramID == 0)
+                    validationMessageStore.Add(editContext.Field(nameof(employeeInfo.ProgramID)), "You must select a program");
+
+                if (employeeInfo.PositionID == 0)
+                    validationMessageStore.Add(editContext.Field(nameof(employeeInfo.PositionID)), "You must select a position");
+
+                if (editContext.GetValidationMessages().Any())
+                {
+                    editContext.NotifyValidationStateChanged();
+                }
+                else
+                {
+                    if (EmployeeID.HasValue && EmployeeID.Value > 0)
+                    {
+                        EmployeeServices.Employee_Update(employeeInfo);
+                        feedBackMsg = $"Employee (ID: {employeeInfo.EmployeeID}) updated.";
+                    }
+                    else
+                    {
+                        int newId = EmployeeServices.Employee_Add(employeeInfo);
+                        feedBackMsg = $"Employee (ID: {newId}) added.";
+                        EmployeeID = newId;
+                    }
+                }
+            }
+        }
+        catch (ArgumentNullException ex)
+        {
+            feedBackMsg = $"Missing Data: {ex.Message}";
+        }
+        catch (ArgumentException ex)
+        {
+            feedBackMsg = $"Data Issue: {ex.Message}";
+        }
+        catch (Exception ex)
+        {
+            feedBackMsg = $"System Error: {ex.Message}";
+        }
+    }
+
 
 }
