@@ -46,5 +46,28 @@ namespace StarTEDSystem.BLL
             partialName = partialName.Trim();
             return _context.Employees.Count(e => e.ReleaseDate == null &&(e.FirstName.Contains(partialName) || e.LastName.Contains(partialName)));
         }
+        public int Employee_Add(Employee item)
+        {
+            if (item == null) { 
+            throw new ArgumentNullException("Employee data is missing."); }
+            item.EmployeeID = 0;
+            _context.Employees.Add(item);
+            _context.SaveChanges();
+            return item.EmployeeID;
+        }
+        public void Employee_Update(Employee item)
+        {
+            if (item == null)
+            { throw new ArgumentNullException("Employee data is missing."); }
+            Employee existing = _context.Employees.Find(item.EmployeeID);
+            if (existing == null)
+            { throw new ArgumentException("Employee not found."); }
+            existing.FirstName = item.FirstName;
+            existing.LastName = item.LastName;
+            existing.DateHired = item.DateHired;
+            _context.SaveChanges();
+        }
+
+
     }
 }
