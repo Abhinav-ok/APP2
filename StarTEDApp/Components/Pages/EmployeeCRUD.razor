@@ -31,10 +31,18 @@
     private Employee employeeInfo = new Employee();
     private EditContext editContext;
     private ValidationMessageStore validationMessageStore;
+    private List<StarTEDSystem.Entities.Program> programList = new();
+    private List<Position> positionList = new();
+
 
 
     [Inject]
     private EmployeeServices EmployeeServices { get; set; }
+    [Inject]
+    private ProgramServices ProgramServices { get; set; }
+    [Inject]
+    private PositionServices PositionServices { get; set; }
+
 
     protected override void OnInitialized()
     {
@@ -50,6 +58,9 @@
             }
             editContext = new EditContext(employeeInfo);
             validationMessageStore = new ValidationMessageStore(editContext);
+            programList = ProgramServices.Program_GetList();
+            positionList = PositionServices.Position_GetList();
+
         }
         catch (Exception ex)
         {
