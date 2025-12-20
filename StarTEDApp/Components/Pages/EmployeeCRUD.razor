@@ -17,7 +17,42 @@
 <EditForm EditContext="@editContext"><DataAnnotationsValidator/> <ValidationSummary />
     <div class="row">
         <div class="col-md-6">
-            <p>Form fieldss</p>
+            <label>First Name</label>
+            <InputText class="form-control" @bind-Value="employeeInfo.FirstName" />
+            <ValidationMessage For="@(() => employeeInfo.FirstName)" />
+
+            <label>Last Name</label>
+            <InputText class="form-control" @bind-Value="employeeInfo.LastName" />
+            <ValidationMessage For="@(() => employeeInfo.LastName)" />
+
+            <label >Date Hired</label>
+            <InputDate class="form-control" @bind-Value="employeeInfo.DateHired" />
+            <ValidationMessage For="@(() => employeeInfo.DateHired)" />
+
+            <label >Program</label>
+            <InputSelect class="form-control" @bind-Value="employeeInfo.ProgramID">
+                <option value="0">Select:</option>
+                @foreach (var p in programList)
+                {
+                    <option value="@p.ProgramID">@p.ProgramName</option>
+                }
+            </InputSelect>
+            <ValidationMessage For="@(() => employeeInfo.ProgramID)" />
+
+            <label class="form-label mt-3">Position</label>
+            <InputSelect class="form-control" @bind-Value="employeeInfo.PositionID">
+                <option value="0">... select ...</option>
+                @foreach (var pos in positionList)
+                {
+                    <option value="@pos.PositionID">@pos.Description</option>
+                }
+            </InputSelect>
+            <ValidationMessage For="@(() => employeeInfo.PositionID)" />
+
+            <label class="form-label mt-3">Login ID</label>
+            <InputText class="form-control" @bind-Value="employeeInfo.LoginID" />
+            <ValidationMessage For="@(() => employeeInfo.LoginID)" />
+
         </div>
     </div>
 </EditForm>
